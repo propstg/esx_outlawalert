@@ -4,58 +4,58 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 RegisterServerEvent('thiefInProgress')
 AddEventHandler('thiefInProgress', function(street1, street2, vehicleName, sex)
-    if vehicleName == "NULL" then
-        TriggerClientEvent("outlawNotify", -1, _('unknown_vehicle_stolen_both_streets', sex, street1, street2))
+    if vehicleName == 'NULL' then
+        TriggerClientEvent('outlawNotify', -1, _('unknown_vehicle_stolen_both_streets', sex, street1, street2))
     else
-        TriggerClientEvent("outlawNotify", -1, _('known_vehicle_stolen_both_streets', vehicleName, sex, street1, street2))
+        TriggerClientEvent('outlawNotify', -1, _('known_vehicle_stolen_both_streets', vehicleName, sex, street1, street2))
     end
 end)
 
 RegisterServerEvent('thiefInProgressS1')
 AddEventHandler('thiefInProgressS1', function(street1, vehicleName, sex)
-    if vehicleName == "NULL" then
-        TriggerClientEvent("outlawNotify", -1, _('unknown_vehicle_stolen_one_street', sex, street1))
+    if vehicleName == 'NULL' then
+        TriggerClientEvent('outlawNotify', -1, _('unknown_vehicle_stolen_one_street', sex, street1))
     else
-        TriggerClientEvent("outlawNotify", -1, _('known_vehicle_stolen_one_street', vehicleName, sex, street1))
+        TriggerClientEvent('outlawNotify', -1, _('known_vehicle_stolen_one_street', vehicleName, sex, street1))
     end
 end)
 
 RegisterServerEvent('thiefInProgressPolice')
 AddEventHandler('thiefInProgressPolice', function(street1, street2, vehicleName, sex)
-    if vehicleName == "NULL" then
-        TriggerClientEvent("outlawNotify", -1, _('unknown_police_vehicle_stolen_both_streets', sex, street1, street2))
+    if vehicleName == 'NULL' then
+        TriggerClientEvent('outlawNotify', -1, _('unknown_police_vehicle_stolen_both_streets', sex, street1, street2))
     else
-        TriggerClientEvent("outlawNotify", -1, _('known_police_vehicle_stolen_both_streets', vehicleName, sex, street1, street2))
+        TriggerClientEvent('outlawNotify', -1, _('known_police_vehicle_stolen_both_streets', vehicleName, sex, street1, street2))
     end
 end)
 
 RegisterServerEvent('thiefInProgressS1Police')
 AddEventHandler('thiefInProgressS1Police', function(street1, vehicleName, sex)
-    if vehicleName == "NULL" then
-        TriggerClientEvent("outlawNotify", -1, _('unknown_police_vehicle_stolen_one_street', sex, street1))
+    if vehicleName == 'NULL' then
+        TriggerClientEvent('outlawNotify', -1, _('unknown_police_vehicle_stolen_one_street', sex, street1))
     else
-        TriggerClientEvent("outlawNotify", -1, _('known_police_vehicle_stolen_one_street', vehicleName, sex, street1))
+        TriggerClientEvent('outlawNotify', -1, _('known_police_vehicle_stolen_one_street', vehicleName, sex, street1))
     end
 end)
 
 RegisterServerEvent('meleeInProgress')
 AddEventHandler('meleeInProgress', function(street1, street2, sex)
-    TriggerClientEvent("outlawNotify", -1, _('melee_in_progress_both_streets', sex, street1, street2))
+    TriggerClientEvent('outlawNotify', -1, _('melee_in_progress_both_streets', sex, street1, street2))
 end)
 
 RegisterServerEvent('meleeInProgressS1')
 AddEventHandler('meleeInProgressS1', function(street1, sex)
-    TriggerClientEvent("outlawNotify", -1, _('melee_in_progress_one_street', sex, street1))
+    TriggerClientEvent('outlawNotify', -1, _('melee_in_progress_one_street', sex, street1))
 end)
 
 RegisterServerEvent('gunshotInProgress')
 AddEventHandler('gunshotInProgress', function(street1, street2, sex)
-    TriggerClientEvent("outlawNotify", -1, _('gunshots_in_progress_both_streets', sex, street1, street2))
+    TriggerClientEvent('outlawNotify', -1, _('gunshots_in_progress_both_streets', sex, street1, street2))
 end)
 
 RegisterServerEvent('gunshotInProgressS1')
 AddEventHandler('gunshotInProgressS1', function(street1, sex)
-    TriggerClientEvent("outlawNotify", -1, _('gunshots_in_progress_one_street', sex, street1))
+    TriggerClientEvent('outlawNotify', -1, _('gunshots_in_progress_one_street', sex, street1))
 end)
 
 RegisterServerEvent('thiefInProgressPos')
@@ -73,28 +73,30 @@ AddEventHandler('meleeInProgressPos', function(mx, my, mz)
     TriggerClientEvent('meleePlace', -1, mx, my, mz)
 end)
 
-ESX.RegisterServerCallback('esx_outlawalert:ownvehicle',function(source,cb, vehicleProps)
+ESX.RegisterServerCallback('esx_outlawalert:ownvehicle', function(source, cb, vehicleProps)
     local isFound = false
     local _source = source
-    local xPlayer = ESX.GetPlayerFromId(_source)
-    local vehicules = getPlayerVehicles(xPlayer.getIdentifier())
-    local plate = vehicleProps.plate
 
-    for _, v in pairs(vehicules) do
-        if(plate == v.plate)then
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    local vehicles = getPlayerVehicles(xPlayer.getIdentifier())
+
+    for _, vehicle in pairs(vehicles) do
+        if vehicleProps.plate == vehicle.plate then
             isFound = true
             break
         end        
     end
+
     cb(isFound)
 end)
 
 function getPlayerVehicles(identifier)
     local vehicles = {}
-    local data = MySQL.Sync.fetchAll("SELECT * FROM owned_vehicles WHERE owner = @identifier",{['@identifier'] = identifier})    
-    for _, v in pairs(data) do
-        local vehicle = json.decode(v.vehicle)
-        table.insert(vehicles, {id = v.id, plate = vehicle.plate})
+    local data = MySQL.Sync.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @identifier', {['@identifier'] = identifier})
+
+    for _, vehicle in pairs(data) do
+        table.insert(vehicles, {id = vehicle.id, plate = json.decode(vehicle.vehicle).plate})
     end
+
     return vehicles
 end

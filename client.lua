@@ -30,33 +30,36 @@ Citizen.CreateThread(function()
     end)
 
     while true do
-        Wait(100)
         playerPosition = GetEntityCoords(playerPed,  true)
         streetHash1, streetHash2 = Citizen.InvokeNative(0x2EB41072B4C1E4C0, playerPosition.x, playerPosition.y, playerPosition.z, Citizen.PointerValueInt(), Citizen.PointerValueInt())
         streetName1 = GetStreetNameFromHashKey(streetHash1)
         streetName2 = GetStreetNameFromHashKey(streetHash2)
         vehicle = GetVehiclePedIsIn(playerPed, false)
+        
+        Wait(100)
     end
 end)
 
 Citizen.CreateThread(function()
     while true do
-        Wait(0)
         if NetworkIsSessionStarted() then
-            DecorRegister("IsOutlaw",  3)
-            DecorSetInt(playerPed, "IsOutlaw", 1)
+            DecorRegister('IsOutlaw',  3)
+            DecorSetInt(playerPed, 'IsOutlaw', 1)
             return
         end
+
+        Wait(0)
     end
 end)
 
 Citizen.CreateThread(function()
     while true do
-        Wait(0)
-        if DecorGetInt(playerPed, "IsOutlaw") == 2 then
+        if DecorGetInt(playerPed, 'IsOutlaw') == 2 then
             Wait(Config.Timer * 60000)
-            DecorSetInt(playerPed, "IsOutlaw", 1)
+            DecorSetInt(playerPed, 'IsOutlaw', 1)
         end
+
+        Wait(0)
     end
 end)
 
@@ -102,7 +105,7 @@ Citizen.CreateThread(function()
         Wait(15)
         
         if IsPedInMeleeCombat(playerPed) then
-            DecorSetInt(playerPed, "IsOutlaw", 2)
+            DecorSetInt(playerPed, 'IsOutlaw', 2)
 
             if not isPlayerPoliceOfficer() or Config.ShowCopsMisbehave then
                 TriggerServerEvent('meleeInProgressPos', playerPosition.x, playerPosition.y, playerPosition.z)
@@ -110,7 +113,7 @@ Citizen.CreateThread(function()
                 if streetHash2 == 0 then
                     TriggerServerEvent('meleeInProgressS1', streetName1, playerSex)
                 else
-                    TriggerServerEvent("meleeInProgress", streetName1, streetName2, playerSex)
+                    TriggerServerEvent('meleeInProgress', streetName1, streetName2, playerSex)
                 end
 
                 Wait(3000)
@@ -124,7 +127,7 @@ Citizen.CreateThread(function()
         Wait(15)
 
         if IsPedShooting(playerPed) then
-            DecorSetInt(playerPed, "IsOutlaw", 2)
+            DecorSetInt(playerPed, 'IsOutlaw', 2)
 
             if not isPlayerPoliceOfficer() or Config.ShowCopsMisbehave then
                 TriggerServerEvent('gunshotInProgressPos', playerPosition.x, playerPosition.y, playerPosition.z)
@@ -132,7 +135,7 @@ Citizen.CreateThread(function()
                 if streetHash2 == 0 then
                     TriggerServerEvent('gunshotInProgressS1', streetName1, playerSex)
                 else
-                    TriggerServerEvent("gunshotInProgress", streetName1, streetName2, playerSex)
+                    TriggerServerEvent('gunshotInProgress', streetName1, streetName2, playerSex)
                 end
 
                 Wait(3000)
