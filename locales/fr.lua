@@ -1,0 +1,16 @@
+Locales['fr'] = {
+    ['unknown_vehicle_stolen_both_streets']         = '~r~Vol de vehicule par ~w~%s ~r~entre ~w~%s~r~ et ~w~%s',
+    ['known_vehicle_stolen_both_streets']           = '~r~Vol de vehicule ~w~%s ~r~ par ~w~%s ~r~entre ~w~%s~r~ et ~w~%s',
+    ['unknown_vehicle_stolen_one_street']           = '~r~Vol de vehicule par ~w~%s ~r~à ~w~%s',
+    ['known_vehicle_stolen_one_street']             = '~r~Vol de vehicule ~w~(%s) ~r~par ~w~%s ~r~à ~w~%s',
+    ['unknown_police_vehicle_stolen_both_streets']  = '~r~Vol de vehicule de POLICE par ~w~%s ~r~entre ~w~%s~r~ et ~w~%s',
+    ['known_police_vehicle_stolen_both_streets']    = '~r~Vol de vehicule de POLICE ~w~%s ~r~par ~w~%s ~r~entre ~w~%s~r~ et ~w~%s',
+    ['unknown_police_vehicle_stolen_one_street']    = '~r~Vol de vehicule de POLICE par ~w~%s ~r~à ~w~%s',
+    ['known_police_vehicle_stolen_one_street']      = '~r~Vol de vehicule de POLICE ~w~%s ~r~par ~w~%s ~r~à ~w~%s',
+    ['melee_in_progress_both_streets']              = '~r~Une bagarre a éclaté par ~w~%s ~r~entre ~w~%s~r~ et ~w~%s',
+    ['melee_in_progress_one_street']                = '~r~Une bagarre a éclaté par ~w~%s ~r~à ~w~%s',
+    ['gunshots_in_progress_both_streets']           = '~r~Coup de feu par ~w~%s ~r~entre ~w~%s~r~ et ~w~%s',
+    ['gunshots_in_progress_one_street']             = '~r~Coup de feu par ~w~%s ~r~à ~w~%s',
+    ['male']                                        = 'un homme',
+    ['female']                                      = 'une femme',
+}

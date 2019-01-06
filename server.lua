@@ -3,59 +3,59 @@ ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 RegisterServerEvent('thiefInProgress')
-AddEventHandler('thiefInProgress', function(street1, street2, veh, sex)
-    if veh == "NULL" then
-        TriggerClientEvent("outlawNotify", -1, "~r~Vol de vehicule par ~w~"..sex.." ~r~entre ~w~"..street1.."~r~ et ~w~"..street2)
+AddEventHandler('thiefInProgress', function(street1, street2, vehicleName, sex)
+    if vehicleName == "NULL" then
+        TriggerClientEvent("outlawNotify", -1, _('unknown_vehicle_stolen_both_streets', sex, street1, street2))
     else
-        TriggerClientEvent("outlawNotify", -1, "~r~Vol de vehicule ~w~"..veh.." ~r~ par ~w~"..sex.." ~r~entre ~w~"..street1.."~r~ et ~w~"..street2)
+        TriggerClientEvent("outlawNotify", -1, _('known_vehicle_stolen_both_streets', vehicleName, sex, street1, street2))
     end
 end)
 
 RegisterServerEvent('thiefInProgressS1')
-AddEventHandler('thiefInProgressS1', function(street1, veh, sex)
-    if veh == "NULL" then
-        TriggerClientEvent("outlawNotify", -1, "~r~Vol de vehicule par ~w~"..sex.." ~r~à ~w~"..street1)
+AddEventHandler('thiefInProgressS1', function(street1, vehicleName, sex)
+    if vehicleName == "NULL" then
+        TriggerClientEvent("outlawNotify", -1, _('unknown_vehicle_stolen_one_street', sex, street1))
     else
-        TriggerClientEvent("outlawNotify", -1, "~r~Vol de vehicule ~w~"..veh.." ~r~par ~w~"..sex.." ~r~à ~w~"..street1)
+        TriggerClientEvent("outlawNotify", -1, _('known_vehicle_stolen_one_street', vehicleName, sex, street1))
     end
 end)
 
 RegisterServerEvent('thiefInProgressPolice')
-AddEventHandler('thiefInProgressPolice', function(street1, street2, veh, sex)
-    if veh == "NULL" then
-        TriggerClientEvent("outlawNotify", -1, "~r~Vol de vehicule de POLICE par ~w~"..sex.." ~r~entre ~w~"..street1.."~r~ et ~w~"..street2)
+AddEventHandler('thiefInProgressPolice', function(street1, street2, vehicleName, sex)
+    if vehicleName == "NULL" then
+        TriggerClientEvent("outlawNotify", -1, _('unknown_police_vehicle_stolen_both_streets', sex, street1, street2))
     else
-        TriggerClientEvent("outlawNotify", -1, "~r~Vol de vehicule de POLICE ~w~"..veh.." ~r~ par ~w~"..sex.." ~r~entre ~w~"..street1.."~r~ et ~w~"..street2)
+        TriggerClientEvent("outlawNotify", -1, _('known_police_vehicle_stolen_both_streets', vehicleName, sex, street1, street2))
     end
 end)
 
 RegisterServerEvent('thiefInProgressS1Police')
-AddEventHandler('thiefInProgressS1Police', function(street1, veh, sex)
-    if veh == "NULL" then
-        TriggerClientEvent("outlawNotify", -1, "~r~Vol de vehicule de POLICE par ~w~"..sex.." ~r~à ~w~"..street1)
+AddEventHandler('thiefInProgressS1Police', function(street1, vehicleName, sex)
+    if vehicleName == "NULL" then
+        TriggerClientEvent("outlawNotify", -1, _('unknown_police_vehicle_stolen_one_street', sex, street1))
     else
-        TriggerClientEvent("outlawNotify", -1, "~r~Vol de vehicule de POLICE ~w~"..veh.." ~r~par ~w~"..sex.." ~r~à ~w~"..street1)
+        TriggerClientEvent("outlawNotify", -1, _('known_police_vehicle_stolen_one_street', vehicleName, sex, street1))
     end
 end)
 
 RegisterServerEvent('meleeInProgress')
 AddEventHandler('meleeInProgress', function(street1, street2, sex)
-    TriggerClientEvent("outlawNotify", -1, "~r~Une bagarre a éclaté par ~w~"..sex.." ~r~entre ~w~"..street1.."~r~ et ~w~"..street2)
+    TriggerClientEvent("outlawNotify", -1, _('melee_in_progress_both_streets', sex, street1, street2))
 end)
 
 RegisterServerEvent('meleeInProgressS1')
 AddEventHandler('meleeInProgressS1', function(street1, sex)
-    TriggerClientEvent("outlawNotify", -1, "~r~Une bagarre a éclaté par ~w~"..sex.." ~r~à ~w~"..street1)
+    TriggerClientEvent("outlawNotify", -1, _('melee_in_progress_one_street', sex, street1))
 end)
 
 RegisterServerEvent('gunshotInProgress')
 AddEventHandler('gunshotInProgress', function(street1, street2, sex)
-    TriggerClientEvent("outlawNotify", -1, "~r~Coup de feu par ~w~"..sex.." ~r~entre ~w~"..street1.."~r~ et ~w~"..street2)
+    TriggerClientEvent("outlawNotify", -1, _('gunshots_in_progress_both_streets', sex, street1, street2))
 end)
 
 RegisterServerEvent('gunshotInProgressS1')
 AddEventHandler('gunshotInProgressS1', function(street1, sex)
-    TriggerClientEvent("outlawNotify", -1, "~r~Coup de feu par ~w~"..sex.." ~r~à ~w~"..street1)
+    TriggerClientEvent("outlawNotify", -1, _('gunshots_in_progress_one_street', sex, street1))
 end)
 
 RegisterServerEvent('thiefInProgressPos')
