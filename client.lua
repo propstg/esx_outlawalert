@@ -65,7 +65,7 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        Wait(15)
+        Wait(0)
 
         if IsPedTryingToEnterALockedVehicle(playerPed) or IsPedJacking(playerPed) then
             TriggerServerEvent('eden_garage:debug', 'carjacking!')
@@ -102,7 +102,7 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        Wait(15)
+        Wait(0)
         
         if IsPedInMeleeCombat(playerPed) then
             DecorSetInt(playerPed, 'IsOutlaw', 2)
@@ -124,7 +124,7 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        Wait(15)
+        Wait(0)
 
         if IsPedShooting(playerPed) then
             DecorSetInt(playerPed, 'IsOutlaw', 2)
@@ -157,7 +157,7 @@ end)
 RegisterNetEvent('outlawNotify')
 AddEventHandler('outlawNotify', function(alert)
     if isPlayerPoliceOfficer() then
-        Notify(alert)
+        ESX.ShowNotification(alert)
     end
 end)
 
@@ -171,7 +171,7 @@ end)
 RegisterNetEvent('gunshotPlace')
 AddEventHandler('gunshotPlace', function(gx, gy, gz)
     if Config.GunshotAlert and isPlayerPoliceOfficer() then
-        showExpiringBlip(gx, gy, gz, 1, 1, Config.BlipGunTime)
+        showExpiringBlip(gx, gy, gz, 10, 1, Config.BlipGunTime)
     end
 end)
 
@@ -181,12 +181,6 @@ AddEventHandler('meleePlace', function(mx, my, mz)
         showExpiringBlip(mx, my, mz, 270, 17, Config.BlipMeleeTime)
     end
 end)
-
-function Notify(text)
-    SetNotificationTextEntry('STRING')
-    AddTextComponentString(text)
-    DrawNotification(false, false)
-end
 
 function isPlayerPoliceOfficer()
     return PlayerData.job ~= nil and PlayerData.job.name == 'police'
@@ -206,5 +200,5 @@ function showExpiringBlip(x, y, z, sprite, color, decayTime)
         SetBlipAlpha(blip, transparency)
     end
 
-    SetBlipSprite(blip, 2)
+    RemoveBlip(blip)
 end
