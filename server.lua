@@ -44,12 +44,12 @@ AddEventHandler('meleeInProgress', function(street1, street2, sex, zoneName)
 end)
 
 RegisterServerEvent('meleeInProgressS1')
-AddEventHandler('meleeInProgressS1', function(street1, sex)
+AddEventHandler('meleeInProgressS1', function(street1, sex, zoneName)
     TriggerClientEvent('outlawNotify', -1, _('melee_in_progress_one_street', sex, street1, zoneName))
 end)
 
 RegisterServerEvent('gunshotInProgress')
-AddEventHandler('gunshotInProgress', function(street1, street2, sex)
+AddEventHandler('gunshotInProgress', function(street1, street2, sex, zoneName)
     TriggerClientEvent('outlawNotify', -1, _('gunshots_in_progress_both_streets', sex, street1, street2, zoneName))
 end)
 

@@ -10,3 +10,12 @@ Config.BlipMeleeTime = 7 --in second
 Config.BlipJackingTime = 10 -- in second
 Config.ShowCopsMisbehave = true  --show notification when cops steal too
 Config.ShowNotificationsToAnyPlayerInPoliceVehicle = false
+
+-- https://forum.fivem.net/t/list-of-weapon-spawn-names/90750
+-- just set to {} for no whitelisted weapons
+Config.WeaponWhitelist = {
+    'WEAPON_FIREEXTINGUISHER',
+    'WEAPON_SNOWBALL',
+    'WEAPON_PETROLCAN',
+    'WEAPON_BALL',
+}

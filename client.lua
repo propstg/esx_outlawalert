@@ -1,5 +1,6 @@
 ESX = nil
 local PlayerData = {}
+local whitelistedWeapons = {}
 local playerPed = GetPlayerPed(-1)
 local playerPosition = nil
 local streetHash1 = 0
@@ -13,6 +14,7 @@ local zoneName = ''
 
 Citizen.CreateThread(function()
     initEsx()
+    initWhitelistedWeapons()
 
     Citizen.CreateThread(getPlayerSexLoop)
     Citizen.CreateThread(gatherDataLoop)
@@ -37,6 +39,12 @@ function initEsx()
             break
         end
         Citizen.Wait(10)
+    end
+end
+
+function initWhitelistedWeapons()
+    for _, weaponModel in pairs(Config.WeaponWhitelist) do
+        whitelistedWeapons[GetHashKey(weaponModel)] = true
     end
 end
 
@@ -158,7 +166,7 @@ function shootingLoop()
     while true do
         Wait(0)
 
-        if IsPedShooting(playerPed) then
+        if IsPedShooting(playerPed) and not whitelistedWeapons[GetSelectedPedWeapon(playerPed)] then
             DecorSetInt(playerPed, 'IsOutlaw', 2)
 
             if not isPlayerPoliceOfficer() or Config.ShowCopsMisbehave then
