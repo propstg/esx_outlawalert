@@ -9,3 +9,4 @@ Config.BlipGunTime = 5 --in second
 Config.BlipMeleeTime = 7 --in second
 Config.BlipJackingTime = 10 -- in second
 Config.ShowCopsMisbehave = true  --show notification when cops steal too
+Config.ShowNotificationsToAnyPlayerInPoliceVehicle = false

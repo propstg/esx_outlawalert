@@ -7,6 +7,7 @@ local streetHash2 = 0
 local streetName1 = ''
 local streetName2 = ''
 local vehicle = 0
+local isInPoliceVehicle = false
 local playerSex = ''
 
 Citizen.CreateThread(function()
@@ -15,20 +16,31 @@ Citizen.CreateThread(function()
         Citizen.Wait(0)
     end
 
-    Citizen.CreateThread(function()
-        while true do
-            ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-                if skin.sex == 0 then
-                    playerSex = _('male')
-                else
-                    playerSex = _('female')
-                end
-            end)
-            
-            Wait(30000)
-        end
-    end)
+    Citizen.CreateThread(getPlayerSexLoop)
+    Citizen.CreateThread(gatherDataLoop)
+    Citizen.CreateThread(initDecorLoop)
+    Citizen.CreateThread(decorLoop)
 
+    Citizen.CreateThread(carJackingLoop)
+    Citizen.CreateThread(meleeCombatLoop)
+    Citizen.CreateThread(shootingLoop)
+end)
+
+function getPlayerSexLoop()
+    while true do
+        ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+            if skin.sex == 0 then
+                playerSex = _('male')
+            else
+                playerSex = _('female')
+            end
+        end)
+        
+        Wait(30000)
+    end
+end
+
+function gatherDataLoop()
     while true do
         playerPed = GetPlayerPed(-1)
         playerPosition = GetEntityCoords(playerPed,  true)
@@ -36,12 +48,13 @@ Citizen.CreateThread(function()
         streetName1 = GetStreetNameFromHashKey(streetHash1)
         streetName2 = GetStreetNameFromHashKey(streetHash2)
         vehicle = GetVehiclePedIsIn(playerPed, false)
+        isInPoliceVehicle = IsPedInAnyPoliceVehicle(playerPed)
         
         Wait(100)
     end
-end)
+end
 
-Citizen.CreateThread(function()
+function initDecorLoop()
     while true do
         if NetworkIsSessionStarted() then
             DecorRegister('IsOutlaw',  3)
@@ -51,9 +64,9 @@ Citizen.CreateThread(function()
 
         Wait(0)
     end
-end)
+end
 
-Citizen.CreateThread(function()
+function decorLoop()
     while true do
         if DecorGetInt(playerPed, 'IsOutlaw') == 2 then
             Wait(Config.Timer * 60000)
@@ -62,9 +75,9 @@ Citizen.CreateThread(function()
 
         Wait(0)
     end
-end)
+end
 
-Citizen.CreateThread(function()
+function carJackingLoop()
     while true do
         Wait(0)
 
@@ -83,13 +96,12 @@ Citizen.CreateThread(function()
 
                         local jackingVehicle = GetVehiclePedIsTryingToEnter(playerPed)
                         local vehicleName = GetLabelText(GetDisplayNameFromVehicleModel(GetEntityModel(jackingVehicle)))
-                        local isPoliceVehicle = IsPedInAnyPoliceVehicle(playerPed)
 
-                        if streetHash2 == 0 and isPoliceVehicle then
+                        if streetHash2 == 0 and isInPoliceVehicle then
                             TriggerServerEvent('thiefInProgressS1police', streetName1, vehicleName, playerSex)
                         elseif streetHash2 == 0 then
                             TriggerServerEvent('thiefInProgressS1', streetName1, vehicleName, playerSex)
-                        elseif isPoliceVehicle then
+                        elseif isInPoliceVehicle then
                             TriggerServerEvent('thiefInProgressPolice', streetName1, streetName2, vehicleName, playerSex)
                         else
                             TriggerServerEvent('thiefInProgress', streetName1, streetName2, vehicleName, playerSex)
@@ -99,9 +111,9 @@ Citizen.CreateThread(function()
             end
         end
     end
-end)
+end
 
-Citizen.CreateThread(function()
+function meleeCombatLoop()
     while true do
         Wait(0)
         
@@ -121,9 +133,9 @@ Citizen.CreateThread(function()
             end
         end
     end
-end)
+end
 
-Citizen.CreateThread(function()
+function shootingLoop()
     while true do
         Wait(0)
 
@@ -143,7 +155,7 @@ Citizen.CreateThread(function()
             end
         end
     end
-end)
+end
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
@@ -157,31 +169,35 @@ end)
 
 RegisterNetEvent('outlawNotify')
 AddEventHandler('outlawNotify', function(alert)
-    if isPlayerPoliceOfficer() then
+    if isPlayerPoliceOfficerOrInVehicle() then
         ESX.ShowNotification(alert)
     end
 end)
 
 RegisterNetEvent('thiefPlace')
 AddEventHandler('thiefPlace', function(tx, ty, tz)
-    if Config.CarJackingAlert and isPlayerPoliceOfficer() then
+    if Config.CarJackingAlert and isPlayerPoliceOfficerOrInVehicle() then
         showExpiringBlip(tx, ty, tz, 10, 1, Config.BlipJackingTime)
     end
 end)
 
 RegisterNetEvent('gunshotPlace')
 AddEventHandler('gunshotPlace', function(gx, gy, gz)
-    if Config.GunshotAlert and isPlayerPoliceOfficer() then
+    if Config.GunshotAlert and isPlayerPoliceOfficerOrInVehicle() then
         showExpiringBlip(gx, gy, gz, 10, 1, Config.BlipGunTime)
     end
 end)
 
 RegisterNetEvent('meleePlace')
 AddEventHandler('meleePlace', function(mx, my, mz)
-    if Config.MeleeAlert and isPlayerPoliceOfficer() then
+    if Config.MeleeAlert and isPlayerPoliceOfficerOrInVehicle() then
         showExpiringBlip(mx, my, mz, 270, 17, Config.BlipMeleeTime)
     end
 end)
+
+function isPlayerPoliceOfficerOrInVehicle()
+    return isPlayerPoliceOfficer() or (Config.ShowNotificationsToAnyPlayerInPoliceVehicle and isInPoliceVehicle)
+end
 
 function isPlayerPoliceOfficer()
     return PlayerData.job ~= nil and PlayerData.job.name == 'police'
