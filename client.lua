@@ -9,6 +9,7 @@ local streetName2 = ''
 local vehicle = 0
 local isInPoliceVehicle = false
 local playerSex = ''
+local zoneName = ''
 
 Citizen.CreateThread(function()
     initEsx()
@@ -57,11 +58,16 @@ function gatherDataLoop()
     while true do
         playerPed = GetPlayerPed(-1)
         playerPosition = GetEntityCoords(playerPed,  true)
+
         streetHash1, streetHash2 = Citizen.InvokeNative(0x2EB41072B4C1E4C0, playerPosition.x, playerPosition.y, playerPosition.z, Citizen.PointerValueInt(), Citizen.PointerValueInt())
         streetName1 = GetStreetNameFromHashKey(streetHash1)
         streetName2 = GetStreetNameFromHashKey(streetHash2)
+
         vehicle = GetVehiclePedIsIn(playerPed, false)
         isInPoliceVehicle = IsPedInAnyPoliceVehicle(playerPed)
+
+        local zoneNameId = GetNameOfZone(playerPosition.x, playerPosition.y, playerPosition.y)
+        zoneName = GetZoneFromNameId(zoneNameId)
         
         Wait(100)
     end
@@ -111,13 +117,13 @@ function carJackingLoop()
                         local vehicleName = GetLabelText(GetDisplayNameFromVehicleModel(GetEntityModel(jackingVehicle)))
 
                         if streetHash2 == 0 and isInPoliceVehicle then
-                            TriggerServerEvent('thiefInProgressS1police', streetName1, vehicleName, playerSex)
+                            TriggerServerEvent('thiefInProgressS1police', streetName1, vehicleName, playerSex, zoneName)
                         elseif streetHash2 == 0 then
-                            TriggerServerEvent('thiefInProgressS1', streetName1, vehicleName, playerSex)
+                            TriggerServerEvent('thiefInProgressS1', streetName1, vehicleName, playerSex, zoneName)
                         elseif isInPoliceVehicle then
-                            TriggerServerEvent('thiefInProgressPolice', streetName1, streetName2, vehicleName, playerSex)
+                            TriggerServerEvent('thiefInProgressPolice', streetName1, streetName2, vehicleName, playerSex, zoneName)
                         else
-                            TriggerServerEvent('thiefInProgress', streetName1, streetName2, vehicleName, playerSex)
+                            TriggerServerEvent('thiefInProgress', streetName1, streetName2, vehicleName, playerSex, zoneName)
                         end
                     end
                 end, vehicleProps)
@@ -137,9 +143,9 @@ function meleeCombatLoop()
                 TriggerServerEvent('meleeInProgressPos', playerPosition.x, playerPosition.y, playerPosition.z)
 
                 if streetHash2 == 0 then
-                    TriggerServerEvent('meleeInProgressS1', streetName1, playerSex)
+                    TriggerServerEvent('meleeInProgressS1', streetName1, playerSex, zoneName)
                 else
-                    TriggerServerEvent('meleeInProgress', streetName1, streetName2, playerSex)
+                    TriggerServerEvent('meleeInProgress', streetName1, streetName2, playerSex, zoneName)
                 end
 
                 Wait(3000)
@@ -159,9 +165,9 @@ function shootingLoop()
                 TriggerServerEvent('gunshotInProgressPos', playerPosition.x, playerPosition.y, playerPosition.z)
 
                 if streetHash2 == 0 then
-                    TriggerServerEvent('gunshotInProgressS1', streetName1, playerSex)
+                    TriggerServerEvent('gunshotInProgressS1', streetName1, playerSex, zoneName)
                 else
-                    TriggerServerEvent('gunshotInProgress', streetName1, streetName2, playerSex)
+                    TriggerServerEvent('gunshotInProgress', streetName1, streetName2, playerSex, zoneName)
                 end
 
                 Wait(3000)
