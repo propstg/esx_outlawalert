@@ -11,10 +11,7 @@ local isInPoliceVehicle = false
 local playerSex = ''
 
 Citizen.CreateThread(function()
-    while ESX == nil do
-        TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-        Citizen.Wait(0)
-    end
+    initEsx()
 
     Citizen.CreateThread(getPlayerSexLoop)
     Citizen.CreateThread(gatherDataLoop)
@@ -25,6 +22,22 @@ Citizen.CreateThread(function()
     Citizen.CreateThread(meleeCombatLoop)
     Citizen.CreateThread(shootingLoop)
 end)
+
+function initEsx()
+    while ESX == nil do
+        TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+        Citizen.Wait(0)
+    end
+
+    while true do
+        local playerData = ESX.GetPlayerData()
+        if playerData.job ~= nil then
+            PlayerData = playerData
+            break
+        end
+        Citizen.Wait(10)
+    end
+end
 
 function getPlayerSexLoop()
     while true do
