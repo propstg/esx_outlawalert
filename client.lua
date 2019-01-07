@@ -30,6 +30,7 @@ Citizen.CreateThread(function()
     end)
 
     while true do
+        playerPed = GetPlayerPed(-1)
         playerPosition = GetEntityCoords(playerPed,  true)
         streetHash1, streetHash2 = Citizen.InvokeNative(0x2EB41072B4C1E4C0, playerPosition.x, playerPosition.y, playerPosition.z, Citizen.PointerValueInt(), Citizen.PointerValueInt())
         streetName1 = GetStreetNameFromHashKey(streetHash1)
