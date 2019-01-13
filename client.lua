@@ -75,7 +75,7 @@ function gatherDataLoop()
         isInPoliceVehicle = IsPedInAnyPoliceVehicle(playerPed)
 
         local zoneNameId = GetNameOfZone(playerPosition.x, playerPosition.y, playerPosition.y)
-        zoneName = ZoneNames(string.upper(zoneNameId))
+        zoneName = ZoneNames[string.upper(zoneNameId)]
         
         Wait(100)
     end
